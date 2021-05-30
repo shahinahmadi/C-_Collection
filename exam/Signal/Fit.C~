@@ -1,0 +1,12 @@
+#include "Fit.h"
+
+using namespace std;
+//Defualt constructor
+Fit::Fit(){}
+double Fit:: myGaus( double* x, double* par ){
+
+    double temp = (x[0]-par[1]) * (x[0]-par[1]) / par[2] / par[2];
+
+    return par[0] * exp( -0.5 * temp  );
+
+}

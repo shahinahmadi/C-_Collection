@@ -1,0 +1,45 @@
+#include "TROOT.h"
+#include "TFile.h"
+#include "TTree.h"
+#include "TBrowser.h"
+#include "TH2.h"
+#include "TRandom.h"
+void tree3(){
+  //create the file, the Tree and a few branches
+  TFile f("tree1.root","recreate");
+  TTree t1("t1","a simple Tree with simple variables");
+  Float_t x, y, z;
+  Double_t random;
+  Int_t ev;
+  t1.Branch("x",&x,"x/F");
+  t1.Branch("y",&y,"y/F");
+  t1.Branch("z",&z,"z/F");
+  //fill the tree
+  for (Int_t i=0;i<1000;i++) {
+    gRandom->Rannor(x,y);
+    z=x+y;
+    t1.Fill();
+  }
+  // Introducing the histograms and reading t1 from the input file.
+  t1.SetBranchAddress("x",&x);
+  t1.SetBranchAddress("y",&y);
+  t1.SetBranchAddress("z",&z);
+  TH1F *hx   = new TH1F("hx","x distribution",100,0,70);
+  TH2F *hxy = new TH2F("hxy","y vs x ; x;y",30,-3,3,30,-3,3);
+  //read all entries and fill the histograms
+  Long64_t nentries = t1.GetEntries();
+  for (int i=0;i<nentries;i++) {
+    t1.GetEntry(i);
+    hx->Fill(x);
+    hxy->Fill(x,y);
+    hxy->GetXaxis()->CenterTitle();
+    hxy->GetYaxis()->CenterTitle();
+  }
+  //Writing both tree and branches to file
+  TFile* outputfile = new TFile("analysis.root","recreate");
+  hxy->Write();
+  t1.Write();
+  outputfile->Close();
+}  
+
+

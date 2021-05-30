@@ -1,0 +1,48 @@
+{ 
+  TH1F *Gain_hist = new TH1F("Gain at point 16","Charge_distribution of 354  pulses at point 16 on the PMT",6254,0,6254);
+ 
+ 
+  ifstream myfile("Gain16.txt"); //file opening constructor
+  vector<double> numbers;
+  double number;
+
+  //Operation to check if the file opened
+  if ( myfile.is_open()){
+    
+    while(myfile >>number ){
+
+      //putting data into the vector
+      numbers.push_back(number);
+          
+
+    }
+  }
+  
+  int n=numbers.size();
+  
+  double a[354];
+  for (int i=0; i<numbers.size();i++){
+    a[i]=numbers.at(i);
+    
+      
+    double  maximum=0;
+    for(int i=0;i<n;i++)
+      {
+        if(a[i]>maximum)
+	  maximum=a[i];
+      }
+    cout<< "The maximum number is"<< maximum<<endl;
+    // max=  *max_element(a,a+n);
+     
+    
+   
+    Gain_hist->GetXaxis()->SetTitle("Charge distribution(ADC unit)");
+    Gain_hist->GetYaxis()->SetTitle("The number of events");
+    Gain_hist->GetXaxis()->CenterTitle();
+    Gain_hist->GetYaxis()->CenterTitle();
+     
+    Gain_hist->Fill(a[i]);
+    Gain_hist->Draw("HIST");
+    cout<<a[i]<<endl;
+  }
+} 

@@ -1,0 +1,7 @@
+{
+
+  f = new TF2("f", "sin(x)*sin(y)/(x*y)",0,10,0,10);
+  
+  f->Draw("surf1");
+
+}

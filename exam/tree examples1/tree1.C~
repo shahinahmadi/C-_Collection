@@ -1,0 +1,30 @@
+#include "TROOT.h"
+#include "TFile.h"
+#include "TTree.h"
+#include "TBrowser.h"
+#include "TH2.h"
+#include "TRandom.h"
+{
+  // CREATING FILE 
+  TFile* f = TFile::Open("myfile.root","RECREATE");
+  //CREATING TTREE
+  TTree t1("t1","a simple Tree with simple variables");
+  //CREATING BRANCH AND PUTTING VARIABLES INSIDE
+  Float_t x, y, z;
+  Int_t ev;
+  t1.Branch("x",&x);
+  t1.Branch("y",&y);
+  t1.Branch("z",&z);
+  //FILLING THE TREE  BY THE VALUE OF VARIABLES
+   for (Int_t i=0;i<1000;i++) {
+     
+     gRandom->Rannor(x,y);
+     z=x+y;
+     
+     t1.Fill();
+  }
+   //WRITING TREE TO THE FILE
+  t1.Write();
+  delete f;
+}
+

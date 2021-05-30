@@ -1,0 +1,20 @@
+#include......
+using namespace std;
+int main()
+{
+  vector<PTF::PMTChannel> channels = {
+    {0, 0} // this is saying we want pmt #1, which is on channel 3.
+  };
+
+  // initialize the wrapper
+  auto wrapper = PTF::Wrapper( 16384, // the maximum number of samples
+  70, // the size of one sample
+    channels,
+    phidgets
+  );
+ // now we can open our file
+ wrapper.openFile("/path/to/file.root");
+ cout << "There are " << wrapper.getNumEntries() << " entries." << endl;
+........
+ return 0;  
+}

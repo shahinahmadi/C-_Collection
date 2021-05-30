@@ -1,0 +1,47 @@
+#define Analyze_cxx
+#include "Analyze.h"
+#include <TH2.h>
+#include <TStyle.h>
+#include <cmath>
+#include <math.h>
+#include "TH2F.h"
+//******** Definition section *********
+TCanvas *c1 = new TCanvas("c1","c1",600,400);
+TH1* ebeamH = NULL;
+TH1* chi2H = NULL;
+TH2F* hscat=NULL;
+
+void Analyze::Begin(TTree * /*tree*/)
+{
+
+  TString option = GetOption();
+  //******** Initialization section *********
+  
+  hscat = new TH2F("hscat","Scatter plot example(chi2 vs ebeam)",100,0,20,100,0,20);
+  chi2H = new TH1D("chi2","Histogram of Chi2",100,0,20);
+  ebeamH = new TH1D("ebeam","Histogram of Chi2",100,149,251);
+  hscat->GetXaxis()->SetTitle("ebeam");
+  hscat->GetYaxis()->SetTitle("chi2");
+  hscat->GetXaxis()->CenterTitle();
+  hscat->GetYaxis()->CenterTitle();
+}
+void Analyze::SlaveBegin(TTree* tree) {}
+Bool_t Analyze::Process(Long64_t entry)
+{
+  // Don’t delete this line! Without it the program will crash.
+  fReader.SetEntry(entry);
+  //******** Loop section *********
+  // You probably want GetEntry(entry) here.
+  GetEntry(entry);
+  gRandom->Rannor(*ebeam,*chi2);
+  hscat->Fill(*ebeam,*chi2);
+  return kTRUE;
+}
+void Analyze::SlaveTerminate() {}
+void Analyze::Terminate()
+{
+  //******** Wrap-up section *********
+  hscat->Draw("scat=0.5");
+  return c1;
+ 
+}
